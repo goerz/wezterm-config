@@ -41,6 +41,14 @@ config.keys = {
     mods = 'LEADER',
     action = wezterm.action.EmitEvent 'toggle-tabbar',
   },
+  { -- Settings
+    key = ',',
+    mods = 'CMD',
+    action = wezterm.action.SpawnCommandInNewWindow {
+      cwd = os.getenv("WEZTERM_CONFIG_DIR"),
+      args = { os.getenv("SHELL"), "--login", "-c", '"$EDITOR" "$WEZTERM_CONFIG_FILE"'},
+    },
+  },
   {
     key = 'r',
     mods = 'LEADER',
