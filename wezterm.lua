@@ -203,8 +203,10 @@ wezterm.on('update-status', function(window, pane)
     end
     local right_status = ""
     local domain = pane:get_domain_name()
-    if domain ~= "local" then
-      right_status = domain .. " "
+    if domain then
+      if domain ~= "local" then
+        right_status = domain .. " "
+      end
     end
     local workspace = window:active_workspace()
     if workspace ~= config.default_workspace then
