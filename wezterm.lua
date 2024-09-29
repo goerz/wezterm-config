@@ -13,6 +13,35 @@ config.unix_domains = {
 
 config.default_workspace = "default"
 
+local launch_menu = {}
+
+if wezterm.target_triple == 'aarch64-apple-darwin' then
+
+  -- Apple Silicon
+  config.set_environment_variables = {
+    PATH = '/opt/homebrew/bin:' .. os.getenv 'PATH',
+  }
+  table.insert(launch_menu, {
+    label = "ZSH",
+    args = { "zsh", "--login" },
+  })
+
+elseif wezterm.target_triple == 'x86_64-pc-windows-msvc' then
+
+  -- Windows
+  table.insert(launch_menu, {
+    label = 'PowerShell',
+    args = { 'powershell.exe', '-NoLogo' },
+  })
+
+end
+
+
+-- See https://wezfurlong.org/wezterm/config/launch.html?h=launch_menu#the-launcher-menu
+-- Note that we've disabled the right-click on the "new tab button"
+config.launch_menu = launch_menu
+
+
 config.leader = { key = 'a', mods = 'CMD', timeout_milliseconds = 5000 }
 
 config.keys = {
@@ -25,6 +54,11 @@ config.keys = {
       mods = "LEADER",
       key = "-",
       action = wezterm.action.SplitVertical { domain = "CurrentPaneDomain" }
+  },
+  { -- open launcher
+    key = 'o',
+    mods = 'CMD',
+    action = wezterm.action.ShowLauncherArgs { flags = 'FUZZY|LAUNCH_MENU_ITEMS|DOMAINS'},
   },
   { -- attach to domain
     key = 'a',
@@ -179,6 +213,18 @@ else
 end
 config.tab_max_width = 20
 config.enable_tab_bar = true
+
+wezterm.on(
+  'new-tab-button-click',
+  function(window, pane, button, default_action)
+    wezterm.log_info('new-tab', window, pane, button, default_action)
+    if (button == "Left") and default_action then
+      window:perform_action(default_action, pane)
+    end
+    -- Do not handle right-click. Instead, use CMD-O for a customized launcher
+    return false  -- Tell WezTerm that we handled the event
+  end
+)
 
 config.adjust_window_size_when_changing_font_size = false
 config.quit_when_all_windows_are_closed = false
