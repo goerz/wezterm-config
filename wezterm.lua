@@ -333,6 +333,11 @@ colors.tab_bar = {
 }
 config.colors = colors
 
+config.inactive_pane_hsb = {
+  saturation = 1.0,
+  brightness = 0.95,
+}
+
 config.font = wezterm.font "JuliaMono"
 config.font_size = 12
 -- no ligatures
