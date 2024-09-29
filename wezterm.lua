@@ -105,6 +105,16 @@ config.keys = {
       -- This very much depends on my configuration using https://github.com/Robitx/gp.nvim
     end),
   },
+  { -- Activate copy mode (cf. `tmux`, in addition to the default ctr-shift-x)
+    key = '[',
+    mods = 'LEADER',
+    action = act.ActivateCopyMode,
+  },
+  { -- Paste (like in tmux)
+    key = ']',
+    mods = 'LEADER',
+    action = act.PasteFrom 'Clipboard',
+  },
   {
     key = 'r',
     mods = 'LEADER',
