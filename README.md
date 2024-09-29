@@ -23,30 +23,36 @@ git clone git@github.com:goerz/wezterm-config.git ~/.config/wezterm
 
 * Light colorscheme. Contrary to current fashion, I do not use dark background terminals.
 
-* Minimal UI for macOS. Combine buttons with tab bar ([`INTEGRATED_BUTTONS`](https://wezfurlong.org/wezterm/config/lua/config/window_decorations.html))
+* Minimal UI for macOS. Combine buttons with tab bar ([`INTEGRATED_BUTTONS`](https://wezfurlong.org/wezterm/config/lua/config/window_decorations.html)).
 
-* Show information about non-default workspace/domain, window ID and terminal size in tab bar
+* Show information about non-default workspace/domain, window ID, and terminal size in the tab bar.
 
 * Leader key `CMD-a` ([screen](https://www.gnu.org/software/screen/) inspired), mainly used for interacting with workspaces/domains.
 
-* Rename current ab with `CMD-r`
+* Rename current tab with `CMD-r`.
 
 * Interactively move panes/tabs to different windows with `CMD-SHIFT-t`.
 
-* Interactively attach to domains (`LEADER a`)
+* Interactively attach to domains with `LEADER a`.
 
-* Show workspaces with `LEADER s`
+* Show workspaces with `LEADER s`.
 
-* Rename workspaces with (`LEADER r`)
+* Rename workspaces with `LEADER r`.
 
-* Toggle the tab bar with `LEADER t`. Useful as a "full screen mode" or for taking screenshots
+* Edit the config file with `CMD-,`.
+
+* "Quick Edit" (open `EDITOR`) with `CMD-e`.
+
+* Open a ChatGPT tab with `CMD-g`. This relies on my [NeoVim configuration](https://github.com/goerz/neovimrc) with the [gp.nvim](https://github.com/Robitx/gp.nvim) plugin.
+
+* Toggle the tab bar with `LEADER t`. Useful as a "full screen mode" or for taking screenshots.
 
 
 ## Extras
 
 ### Custom Icon
 
-The [default App icon isn't very pretty](https://github.com/wez/wezterm/discussions/2396). A better alternative is available at https://github.com/mikker/wezterm-icon. A copy of that repo is included here in the [`wezterm-icon` subfolder](wezterm-icon), for convenience. Just run `make install` there.
+The [default app icon isn't very pretty](https://github.com/wez/wezterm/discussions/2396). A better alternative is available at https://github.com/mikker/wezterm-icon. A copy of that repo is included here in the [`wezterm-icon` subfolder](wezterm-icon) for convenience. Just run `make install` there.
 
 ### NeoVim Wrapper
 
@@ -54,7 +60,7 @@ It turns out that WezTerm makes an excellent GUI wrapper for [NeoVim](https://gi
 
 * [`neovim.lua`](neovim.lua)
 
-This assumes that `nvim` has been installed via `homebrew` and is available in `/opt/homebrew/bin/nvim`. I can be used by running the command
+This assumes that `nvim` has been installed via `homebrew` and is available in `/opt/homebrew/bin/nvim`. It can be used by running the command
 
 ```
 open -n -W -a /Applications/WezTerm.app --args --config-file $HOME/.config/wezterm/neovim.lua
@@ -64,6 +70,6 @@ via a [Shortcut](https://support.apple.com/guide/shortcuts-mac/intro-to-shortcut
 
 In this configuration, WezTerm tabs are disabled (in favor of NeoVim tabs). Most shortcuts are disabled, and the standard macOS shortcuts one would expect from a GUI editor are set up to interact with `neovim`.
 
-The setup is intended to work with [my specific neovim configuration](https://github.com/goerz/neovimrc).
+The setup is intended to work with [my specific NeoVim configuration](https://github.com/goerz/neovimrc).
 
-I'm also using the configuration as part of the (non-public) [Keyboard Maestro](https://www.keyboardmaestro.com/main/) macro that I extensively use in the web browser, where hitting `CMD-I` copies the content of the current text field, writes it to a file, opens neovim (wrapped in WezTerm) to edit that file, waits for the editor to close, reads the edited file content, switches back to the browser, and pastes the content into the text field.
+I'm also using the configuration as part of the (non-public) [Keyboard Maestro](https://www.keyboardmaestro.com/main/) macro that I extensively use in the web browser, where hitting `CMD-I` copies the content of the current text field, writes it to a file, opens NeoVim (wrapped in WezTerm) to edit that file, waits for the editor to close, reads the edited file content, switches back to the browser, and pastes the content into the text field.

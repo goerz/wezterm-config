@@ -48,22 +48,22 @@ config.keys = {
   {
       mods = "LEADER",
       key = "|",
-      action = wezterm.action.SplitHorizontal { domain = "CurrentPaneDomain" }
+      action = act.SplitHorizontal { domain = "CurrentPaneDomain" }
   },
   {
       mods = "LEADER",
       key = "-",
-      action = wezterm.action.SplitVertical { domain = "CurrentPaneDomain" }
+      action = act.SplitVertical { domain = "CurrentPaneDomain" }
   },
   { -- open launcher
     key = 'o',
     mods = 'CMD',
-    action = wezterm.action.ShowLauncherArgs { flags = 'FUZZY|LAUNCH_MENU_ITEMS|DOMAINS'},
+    action = act.ShowLauncherArgs { flags = 'FUZZY|LAUNCH_MENU_ITEMS|DOMAINS'},
   },
   { -- attach to domain
     key = 'a',
     mods = 'LEADER',
-    action = wezterm.action.ShowLauncherArgs { flags = 'FUZZY|DOMAINS' },
+    action = act.ShowLauncherArgs { flags = 'FUZZY|DOMAINS' },
   },
   { -- detach from current domain
     key = 'd',
@@ -73,15 +73,37 @@ config.keys = {
   { -- toggle tab bar
     key = 't',
     mods = 'LEADER',
-    action = wezterm.action.EmitEvent 'toggle-tabbar',
+    action = act.EmitEvent 'toggle-tabbar',
   },
-  { -- Settings
+  { -- settings
     key = ',',
     mods = 'CMD',
-    action = wezterm.action.SpawnCommandInNewWindow {
+    action = act.SpawnCommandInNewWindow {
       cwd = os.getenv("WEZTERM_CONFIG_DIR"),
       args = { os.getenv("SHELL"), "--login", "-c", '"$EDITOR" "$WEZTERM_CONFIG_FILE"'},
     },
+  },
+  { -- quick edit
+    key = 'e',
+    mods = 'CMD',
+    action = act.SpawnCommandInNewTab {
+      args = { os.getenv("SHELL"), "--login", "-c", '"$EDITOR"'},
+    },
+  },
+  { -- ChatGPT
+    key = 'g',
+    mods = 'CMD',
+    action = wezterm.action_callback(function(win, pane)
+      local _, new_pane, _ = win:mux_window():spawn_tab {
+          args = { os.getenv("SHELL"), "--login", "-c", 'nvim'},
+      }
+      local endTime = os.time() + 1.0
+      while os.time() < endTime do
+         -- sleep for 1 sec (nvim needs time to initialize)
+      end
+      new_pane:send_text(":GpChatNew\n")
+      -- This very much depends on my configuration using https://github.com/Robitx/gp.nvim
+    end),
   },
   {
     key = 'r',
