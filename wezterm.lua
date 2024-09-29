@@ -269,5 +269,9 @@ config.font = wezterm.font "JuliaMono"
 config.font_size = 12
 -- no ligatures
 config.harfbuzz_features = { 'calt=0', 'clig=0', 'liga=0' }
+config.window_frame = {  -- tab bar font
+  font = wezterm.font { family = 'Roboto', weight = 'Bold' },
+  font_size = 12,
+}
 
 return config
