@@ -283,10 +283,6 @@ end)
 
 wezterm.on('update-status', function(window, pane)
   if config.enable_tab_bar then
-    local rs_pad = " "
-    if config.use_fancy_tab_bar then
-       rs_pad = "  "
-    end
     local right_status = ""
     local domain = pane:get_domain_name()
     if domain then
@@ -298,7 +294,13 @@ wezterm.on('update-status', function(window, pane)
     if workspace ~= config.default_workspace then
       right_status = right_status .. "(".. workspace .. ")" .. " "
     end
-    right_status = right_status .. '[' .. window:window_id() .. ': ' .. pane:tab():get_size().cols .. "x" .. pane:tab():get_size().rows .. ']' .. rs_pad
+    local pane_size_str = ""
+    local tab = pane:tab()
+    if tab then  -- some panes don't have a tab (e.g., the debug pane)
+        pane_size_str = ': ' .. tab:get_size().cols .. "x" .. tab:get_size().rows
+    end
+    local window_id = window:window_id()
+    right_status = right_status .. '[' .. window_id .. pane_size_str .. ']  '
     if window:leader_is_active() then
       right_status = right_status .. utf8.char(0x1f388) -- balloon
     end
