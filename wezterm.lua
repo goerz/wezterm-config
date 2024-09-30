@@ -301,18 +301,19 @@ wezterm.on('update-status', function(window, pane)
     if workspace ~= config.default_workspace then
       right_status = right_status .. "(".. workspace .. ")" .. " "
     end
-    local pane_size_str = ""
-    local tab = pane:tab()
-    if tab then  -- some panes don't have a tab (e.g., the debug pane)
-        pane_size_str = ': ' .. tab:get_size().cols .. "x" .. tab:get_size().rows
-    end
     local window_id = window:window_id()
-    right_status = right_status .. '[' .. window_id .. pane_size_str .. ']  '
+    local pane_id_str = "." .. pane:pane_id()
+    local dims = pane:get_dimensions()
+    local pane_size_str = ": " .. dims.cols .. "x" .. dims.viewport_rows
+    if pane:tab() then
+        -- only show IDs if pane is associated with a tab. Not for, e.g., the debug pane
+        right_status = right_status .. '[' .. window_id .. pane_id_str.. pane_size_str .. ']  '
+    end
     if window:leader_is_active() then
       right_status = right_status .. utf8.char(0x1f388) -- balloon
     end
     window:set_right_status(wezterm.format {
-      { Foreground = { Color = '#FFFFFF' } },
+      { Foreground = { Color = '#999999' } },
       { Background = { Color = '#333333' } },
       { Text = right_status  },
     })
