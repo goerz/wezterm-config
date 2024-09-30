@@ -211,6 +211,13 @@ config.keys = {
   },
   {
     key = 'p',
+    mods = 'CMD',
+    action = act.PaneSelect {
+      show_pane_ids=true,
+    },
+  },
+  {
+    key = 'p',
     mods = 'CMD|SHIFT',
     action = act.ActivateCommandPalette
   },
