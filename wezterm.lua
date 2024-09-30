@@ -2,7 +2,6 @@ local wezterm = require 'wezterm'
 local act = wezterm.action
 local mux = wezterm.mux
 
-
 local config = wezterm.config_builder()
 
 config.unix_domains = {
@@ -15,6 +14,9 @@ config.default_workspace = "default"
 
 local launch_menu = {}
 
+local on_unix = true
+local on_macos = false
+
 if wezterm.target_triple == 'aarch64-apple-darwin' then
 
   -- Apple Silicon
@@ -25,6 +27,7 @@ if wezterm.target_triple == 'aarch64-apple-darwin' then
     label = "ZSH",
     args = { "zsh", "--login" },
   })
+  on_macos = true
 
 elseif wezterm.target_triple == 'x86_64-pc-windows-msvc' then
 
@@ -33,6 +36,7 @@ elseif wezterm.target_triple == 'x86_64-pc-windows-msvc' then
     label = 'PowerShell',
     args = { 'powershell.exe', '-NoLogo' },
   })
+  on_unix = false
 
 end
 
@@ -74,36 +78,6 @@ config.keys = {
     key = 't',
     mods = 'LEADER',
     action = act.EmitEvent 'toggle-tabbar',
-  },
-  { -- settings
-    key = ',',
-    mods = 'CMD',
-    action = act.SpawnCommandInNewWindow {
-      cwd = os.getenv("WEZTERM_CONFIG_DIR"),
-      args = { os.getenv("SHELL"), "--login", "-c", '"$EDITOR" "$WEZTERM_CONFIG_FILE"'},
-    },
-  },
-  { -- quick edit
-    key = 'e',
-    mods = 'CMD',
-    action = act.SpawnCommandInNewTab {
-      args = { os.getenv("SHELL"), "--login", "-c", '"$EDITOR"'},
-    },
-  },
-  { -- ChatGPT
-    key = 'g',
-    mods = 'CMD',
-    action = wezterm.action_callback(function(win, pane)
-      local _, new_pane, _ = win:mux_window():spawn_tab {
-          args = { os.getenv("SHELL"), "--login", "-c", 'nvim'},
-      }
-      local endTime = os.time() + 1.0
-      while os.time() < endTime do
-         -- sleep for 1 sec (nvim needs time to initialize)
-      end
-      new_pane:send_text(":GpChatNew\n")
-      -- This very much depends on my configuration using https://github.com/Robitx/gp.nvim
-    end),
   },
   { -- Activate copy mode (cf. `tmux`, in addition to the default ctr-shift-x)
     key = '[',
@@ -250,6 +224,50 @@ config.keys = {
     action = act.MoveTabRelative(1)
   },
 }
+
+
+if on_unix then
+
+  table.insert(config.keys, { -- quick edit
+    key = 'e',
+    mods = 'CMD',
+    action = act.SpawnCommandInNewTab {
+      args = { os.getenv("SHELL"), "--login", "-c", '"$EDITOR"'},
+    },
+  })
+
+  table.insert(config.keys, { -- ChatGPT
+    key = 'g',
+    mods = 'CMD',
+    action = wezterm.action_callback(function(win, pane)
+      local _, new_pane, _ = win:mux_window():spawn_tab {
+          args = { os.getenv("SHELL"), "--login", "-c", 'nvim'},
+      }
+      local endTime = os.time() + 1.0
+      while os.time() < endTime do
+         -- sleep for 1 sec (nvim needs time to initialize)
+      end
+      new_pane:send_text(":GpChatNew\n")
+      -- This very much depends on my configuration using https://github.com/Robitx/gp.nvim
+    end),
+  })
+
+end
+
+
+if on_macos then
+
+  table.insert(config.keys, { -- settings
+    key = ',',
+    mods = 'CMD',
+    action = act.SpawnCommandInNewWindow {
+      cwd = os.getenv("WEZTERM_CONFIG_DIR"),
+      args = { os.getenv("SHELL"), "--login", "-c", '"$EDITOR" "$WEZTERM_CONFIG_FILE"'},
+    },
+  })
+
+end
+
 
 config.use_fancy_tab_bar = true
 -- config.use_fancy_tab_bar = false
