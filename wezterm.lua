@@ -186,18 +186,26 @@ config.keys = {
         act.InputSelector {
           action = wezterm.action_callback(function(window, pane, id, label)
             if id then
-              local tab_title = pane:tab():get_title()
+              local orig_tab = pane:tab()
+              local tab_title = nil
+              if orig_tab then
+                tab_title = orig_tab:get_title()
+              end
               local wezterm_bin = wezterm.executable_dir .. "/wezterm"
               if id == "new" then
                 wezterm.log_info('CMD-SHIFT-T: you selected ', label)
                 local tab, _ = pane:move_to_new_window()
-                tab.set_title(tab_title)
+                if tab_title then
+                  tab.set_title(tab_title)
+                end
               else
                 local cmd = { wezterm_bin, 'cli', 'move-pane-to-new-tab', '--pane-id', pane:pane_id(), "--window-id", id}
                 wezterm.log_info('CMD-SHIFT-T: you selected ', label, "->", wezterm.shell_join_args(cmd))
                 local success, stdout, stderr = wezterm.run_child_process(cmd)
                 wezterm.log_info(success, stdout, stderr)
-                pane:tab():set_title(tab_title)
+                if tab_title then
+                   pane:tab():set_title(tab_title)
+                end
               end
             end
           end),
