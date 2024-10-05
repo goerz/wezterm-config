@@ -395,4 +395,41 @@ config.window_frame = {  -- tab bar font
   font_size = 12,
 }
 
+config.bypass_mouse_reporting_modifiers = "SHIFT"
+config.mouse_bindings = {
+
+  -- Change the default click behavior so that it only selects
+  -- text and doesn't open hyperlinks
+  {
+    event={Up={streak=1, button="Left"}},
+    mods="NONE",
+    action=act.CompleteSelection("PrimarySelection"),
+  },
+
+  -- and make CMD-Click open hyperlinks
+  {
+    event={Up={streak=1, button="Left"}},
+    mods="CMD",
+    action=act.OpenLinkAtMouseCursor,
+  },
+  { -- also with SHIFT, so that SHIFT-CMD-click works with and without bypass
+    event={Up={streak=1, button="Left"}},
+    mods="CMD|SHIFT",
+    action=act.OpenLinkAtMouseCursor,
+  },
+
+  -- Disable the 'Down' event of CMD-Click to avoid weird program behaviors
+  {
+    event = { Down = { streak = 1, button = 'Left' } },
+    mods = 'CMD',
+    action = act.Nop,
+  },
+  {
+    event = { Down = { streak = 1, button = 'Left' } },
+    mods = 'CMD|SHIFT',
+    action = act.Nop,
+  },
+
+}
+
 return config
