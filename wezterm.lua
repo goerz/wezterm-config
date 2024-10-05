@@ -385,6 +385,7 @@ config.inactive_pane_hsb = {
   brightness = 0.95,
 }
 
+config.font_dirs = { 'fonts' }
 config.font = wezterm.font "JuliaMono"
 config.font_size = 12
 -- no ligatures
