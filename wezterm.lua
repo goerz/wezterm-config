@@ -123,6 +123,16 @@ config.keys = {
       end),
     },
   },
+  {
+    key = 't',
+    mods = 'SHIFT|CTRL',
+    action = act.SpawnCommandInNewTab { cwd = wezterm.home_dir },
+  },
+  {
+    key = 't',
+    mods = 'SUPER',
+    action = act.SpawnCommandInNewTab { cwd = wezterm.home_dir },
+  },
   { -- Move tab (pane) interactively
     key = 't',
     mods = 'CMD|SHIFT',
