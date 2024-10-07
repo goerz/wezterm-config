@@ -295,6 +295,8 @@ config.adjust_window_size_when_changing_font_size = false
 config.quit_when_all_windows_are_closed = false
 config.window_close_confirmation = 'NeverPrompt'
 
+config.audible_bell = "Disabled"
+
 config.window_padding = {
   left = 5,
   right = 5,
