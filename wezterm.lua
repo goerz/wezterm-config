@@ -48,6 +48,10 @@ config.launch_menu = launch_menu
 
 config.leader = { key = 'a', mods = 'CMD', timeout_milliseconds = 5000 }
 
+-- Show active keymaps (those defined here in addition to active defaults) with
+--
+--     wezterm show-keys --lua
+--
 config.keys = {
   {
       mods = "LEADER",
@@ -58,6 +62,16 @@ config.keys = {
       mods = "LEADER",
       key = "-",
       action = act.SplitVertical { domain = "CurrentPaneDomain" }
+  },
+  {
+    key = 'w',
+    mods = 'SHIFT|CTRL',
+    action = act.CloseCurrentTab{ confirm = false }
+  },
+  {
+    key = 'w',
+    mods = 'SUPER',
+    action = act.CloseCurrentTab{ confirm = false }
   },
   { -- open launcher
     key = 'o',
