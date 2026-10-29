@@ -6,7 +6,7 @@
 --
 -- Or, if opening a particular FILE:
 --
---    open -n -W -a /Applications/WezTerm.app --args --config-file $HOME/.config/wezterm/neovim.lua start --always-new-process -- /opt/homebrew/bin/nvim -c "set mouse=a" "$FILE"
+--    open -n -W -a /Applications/WezTerm.app --args --config-file $HOME/.config/wezterm/neovim.lua start --always-new-process -- "$SHELL" --login -c 'exec nvim -c "set mouse=a" "$1"' nvim "$FILE"
 --
 -- This could be done, e.g., from a Shortcut, using the "Run Shell Script"
 -- action as the only step. That shortcut could then be turned into a standalone
@@ -15,6 +15,7 @@
 local wezterm = require 'wezterm'
 local act = wezterm.action
 local mux = wezterm.mux
+local util = require 'util'
 
 local config = wezterm.config_builder()
 
@@ -22,7 +23,9 @@ config.default_workspace = "neovim"
 config.window_decorations = "TITLE | RESIZE"
 config.enable_tab_bar = false
 
-config.default_prog = { '/opt/homebrew/bin/nvim', '-c', 'set mouse=a' }
+-- A GUI app does not see the shell's PATH, so nvim (and the tools it calls,
+-- like rg and language servers) is found through the login shell
+config.default_prog = util.login_shell "nvim -c 'set mouse=a'"
 
 config.quit_when_all_windows_are_closed = true
 config.window_padding = {

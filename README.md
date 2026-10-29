@@ -43,8 +43,6 @@ git clone git@github.com:goerz/wezterm-config.git ~/.config/wezterm
 
 * "Quick Edit" (open `EDITOR`) with `CMD-e`.
 
-* Open a ChatGPT tab with `CMD-g`. This relies on my [NeoVim configuration](https://github.com/goerz/neovimrc) with the [gp.nvim](https://github.com/Robitx/gp.nvim) plugin.
-
 * Toggle the tab bar with `LEADER t`. Useful as a "full screen mode" or for taking screenshots.
 
 
@@ -60,7 +58,7 @@ It turns out that WezTerm makes an excellent GUI wrapper for [NeoVim](https://gi
 
 * [`neovim.lua`](neovim.lua)
 
-This assumes that `nvim` has been installed via `homebrew` and is available in `/opt/homebrew/bin/nvim`. It can be used by running the command
+It starts `nvim` through your login shell, so it finds the same `nvim` (and the same tools, like `rg`) as an interactive terminal. It can be used by running the command
 
 ```
 open -n -W -a /Applications/WezTerm.app --args --config-file $HOME/.config/wezterm/neovim.lua
