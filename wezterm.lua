@@ -444,41 +444,37 @@ config.mouse_bindings = {
 }
 
 
+-- URL detection follows the GitHub-flavored Markdown autolink rules: a URL
+-- runs until whitespace, a quote, a backtick, or an unbalanced bracket, and
+-- trailing punctuation (.,:;!?'*_~) is not part of it. This handles URLs in
+-- quotes, Markdown links, prose, and parentheses, including Wikipedia-style
+-- URLs that contain balanced parentheses.
+--
+-- WezTerm applies every rule and resolves overlaps by keeping the longest
+-- match, so a `www.` or email match inside a full URL is ignored.
+local url_char = [=[[^\s<>"`(){}\[\]“”‘’«»]]=]
+local url_end_char = [=[[^\s<>"`(){}\[\]“”‘’«».,:;!?'*_~]]=]
+local balanced = '\\(' .. url_char .. '*\\)'
+  .. '|\\[' .. url_char .. '*\\]'
+  .. '|\\{' .. url_char .. '*\\}'
+local url_tail = '(?:' .. url_char .. '|' .. balanced .. ')*'
+  .. '(?:' .. url_end_char .. '|' .. balanced .. ')'
+
 config.hyperlink_rules = {
-  -- Matches: a URL in parens: (URL)
-  -- Markdown: [text](URL title)
+  -- Any scheme: https://, file://, git+ssh://, ...
   {
-    regex = '\\((\\w+://\\S+?)(?:\\s+.+)?\\)',
-    format = '$1',
-    highlight = 1,
-  },
-  -- Matches: a URL in brackets: [URL]
-  {
-    regex = '\\[(\\w+://\\S+?)\\]',
-    format = '$1',
-    highlight = 1,
-  },
-  -- Matches: a URL in curly braces: {URL}
-  {
-    regex = '\\{(\\w+://\\S+?)\\}',
-    format = '$1',
-    highlight = 1,
-  },
-  -- Matches: a URL in angle brackets: <URL>
-  {
-    regex = '<(\\w+://\\S+?)>',
-    format = '$1',
-    highlight = 1,
-  },
-  -- Then handle URLs not wrapped in brackets
-  -- regex = '\\b\\w+://\\S+[)/a-zA-Z0-9-]+',
-  {
-    regex = '(?<![\\(\\{\\[<])\\b\\w+://\\S+',
+    regex = '[a-zA-Z][a-zA-Z0-9+.-]*://' .. url_tail,
     format = '$0',
   },
-  -- implicit mailto link
+  -- Bare www. hostnames
   {
-    regex = '\\b\\w+@[\\w-]+(\\.[\\w-]+)+\\b',
+    regex = '\\bwww\\.[\\w-]+(?:\\.[\\w-]+)+(?:/' .. url_tail .. '|\\b/?)',
+    format = 'https://$0',
+  },
+  -- Implicit mailto link; the TLD must be alphabetic (skips pkg@1.2.3) and
+  -- an scp-style git remote (git@github.com:org/repo) is excluded
+  {
+    regex = '\\b[\\w.%+-]+@[\\w-]+(?:\\.[\\w-]+)*\\.[a-zA-Z]{2,}\\b(?!:)',
     format = 'mailto:$0',
   },
 }
